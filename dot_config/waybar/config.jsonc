@@ -1,0 +1,69 @@
+{
+  "include": [
+    "$HOME/.config/waybar/Modules",
+    "$HOME/.config/waybar/ModulesWorkspaces",
+    "$HOME/.config/waybar/ModulesCustom",
+    "$HOME/.config/waybar/ModulesGroups",
+    "$HOME/.config/waybar/UserModules"
+  ],
+  "layer": "top",
+  "width": 1910,
+  "margin-top": 1,
+  "margn-bottom": 0,
+  "passthrough": false,
+  "position": "top",
+  "spacing": 3,
+  "fixed-center": true,
+  "ipc": true,
+  //Modules layout
+  "modules-left": [
+    "hyprland/workspaces#4",
+    "hyprland/window",
+    "custom/cava_mviz"
+  ],
+  "modules-center": [
+    "group/notify",
+    "custom/separator#line",
+    "clock",
+    "custom/separator#line"
+  ],
+  "modules-right": [
+    "mpris",
+    "group/mobo_drawer",
+    "group/audio",
+    "custom/separator#dot-line",
+    "group/connections"
+  ],
+  // Sourced modules
+  "backlight": {
+    "tooltip": false,
+    "format": " {}%",
+    "interval": 1,
+    "on-scroll-up": "light -A 5",
+    "on-scroll-down": "light -U 5"
+  },
+  "custom/media": {
+    "interval": 30,
+    "format": "{icon} {}",
+    "return-type": "json",
+    "max-length": 20,
+    "format-icons": {
+      "spotify": " ",
+      "default": " "
+    },
+    "escape": true,
+    "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
+    "on-click": "playerctl play-pause"
+  },
+  "custom/power": {
+    "format": "<span color='#f7768e'>⏻</span>",
+    "on-click": "wlogout"
+  },
+  "custom/updates": {
+    "format": "{} Update(s)",
+    "exec": "checkupdates | wc -l",
+    "exec-if": "[[ $(checkupdates | wc -l) != 0 ]]",
+    "interval": 15,
+    "on-click": "alacritty -e paru -Syu && notify-send 'The system has been updated' "
+  }
+}

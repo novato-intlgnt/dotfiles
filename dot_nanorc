@@ -1,0 +1,2 @@
+include /usr/share/nano-syntax-highlighting/*.nanorc
+include ~/.nano/syntax/ALL.nanorc

@@ -1,0 +1,29 @@
+# 🛡️ Private configuration files
+.chezmoi.yaml
+.chezmoi.secret.yaml
+private_*
+
+# ⚙️ Temporary and backup files
+*.bak
+*.swp
+*.tmp
+*.orig
+
+# 🗂️ System-specific files
+.DS_Store
+Thumbs.db
+*.log
+*.lock
+
+# 🛠️ Editor-specific configs
+.vscode/
+.idea/
+*.code-workspace
+
+# 🧪 Test scripts or temporary configs
+test/
+*.sh~
+
+__pycache__/
+
+lazy-lock.json
