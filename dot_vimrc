@@ -1,0 +1,203 @@
+" =============================================================================
+" CONFIGURACIÓN VIM COMPLETA
+" =============================================================================
+
+" CONFIGURACIÓN BÁSICA
+" -----------------------------------------------------------------------------
+set nocompatible              " Desactivar compatibilidad con Vi
+filetype on                   " Detectar tipo de archivo
+filetype plugin on            " Cargar plugins por tipo de archivo
+filetype indent on            " Cargar indentación por tipo de archivo
+syntax enable                 " Habilitar resaltado de sintaxis
+
+" INTERFAZ Y APARIENCIA
+" -----------------------------------------------------------------------------
+set number                    " Mostrar números de línea
+set relativenumber            " Números relativos (útil para navegación)
+set ruler                    " Mostrar posición del cursor
+set showcmd                  " Mostrar comandos en la barra de estado
+set showmode                 " Mostrar modo actual
+set laststatus=2             " Siempre mostrar barra de estado
+set wildmenu                 " Menú de autocompletado mejorado
+set wildmode=list:longest    " Comportamiento del wildmenu
+set scrolloff=8              " Mantener 8 líneas visibles arriba/abajo del cursor
+set sidescrolloff=8          " Mantener 8 columnas visibles a los lados
+
+" COLORES Y TEMA
+" -----------------------------------------------------------------------------
+set termguicolors           " Colores de 24 bits en terminal compatible
+
+" BÚSQUEDA
+" -----------------------------------------------------------------------------
+set hlsearch                 " Resaltar resultados de búsqueda
+set incsearch               " Búsqueda incremental
+set ignorecase              " Ignorar mayúsculas en búsqueda
+set smartcase               " Distinguir mayúsculas si hay alguna en el patrón
+
+" INDENTACIÓN Y FORMATO
+" -----------------------------------------------------------------------------
+set autoindent              " Indentación automática
+set smartindent             " Indentación inteligente
+set expandtab               " Usar espacios en lugar de tabs
+set tabstop=2               " Ancho de tab = 4 espacios
+set shiftwidth=2            " Ancho de indentación = 2 espacios
+set softtabstop=2           " Espacios al presionar tab
+set wrap                    " Ajustar líneas largas
+set linebreak               " Romper líneas en palabras completas
+
+" COMPORTAMIENTO
+" -----------------------------------------------------------------------------
+set backspace=indent,eol,start  " Comportamiento normal del backspace
+set hidden                      " Permitir buffers ocultos sin guardar
+set autoread                    " Recargar archivos modificados externamente
+set mouse=a                     " Habilitar mouse en todos los modos
+set clipboard=unnamedplus       " Usar clipboard del sistema
+set splitbelow                  " Nuevas ventanas horizontales abajo
+set splitright                  " Nuevas ventanas verticales a la derecha
+set updatetime=250              " Tiempo de actualización más rápido
+set timeoutlen=1000             " Tiempo de espera para mapeos
+
+" ARCHIVOS Y RESPALDOS
+" -----------------------------------------------------------------------------
+set nobackup                " No crear archivos de respaldo
+set nowritebackup          " No crear respaldo temporal
+set noswapfile             " No crear archivos swap
+set undofile               " Habilitar historial de deshacer persistente
+set undodir=~/.vim/undodir " Directorio para archivos de deshacer
+
+" MAPEOS DE TECLAS
+" -----------------------------------------------------------------------------
+" Líder
+let mapleader = " "
+
+inoremap jk  <ESC>
+inoremap JK  <ESC>
+
+" Navegación entre ventanas
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Redimensionar ventanas
+nnoremap <C-Up> :resize +2<CR>
+nnoremap <C-Down> :resize -2<CR>
+nnoremap <C-Left> :vertical resize -2<CR>
+nnoremap <C-Right> :vertical resize +2<CR>
+
+" Navegación entre buffers
+nnoremap <S-l> :bnext<CR>
+nnoremap <S-h> :bprevious<CR>
+
+" Limpiar resaltado de búsqueda
+nnoremap <leader>h :nohlsearch<CR>
+
+" Guardar y salir rápido
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>x :wq<CR>
+
+" Mover líneas arriba/abajo
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+" Indentación en modo visual
+vnoremap < <gv
+vnoremap > >gv
+
+" Navegación en modo inserción
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+
+" AUTOCOMANDOS
+" -----------------------------------------------------------------------------
+augroup vimrc_autocmds
+    autocmd!
+    " Remover espacios en blanco al final al guardar
+    autocmd BufWritePre * %s/\s\+$//e
+
+    " Recordar posición del cursor
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+    " Configuración específica por tipo de archivo
+    autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4
+    autocmd FileType javascript,html,css setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+
+    " Resaltar texto copiado
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=200}
+augroup END
+
+" FUNCIONES ÚTILES
+" -----------------------------------------------------------------------------
+" Función para alternar números relativos
+function! NumberToggle()
+    if(&relativenumber == 1)
+        set norelativenumber
+    else
+        set relativenumber
+    endif
+endfunction
+nnoremap <leader>n :call NumberToggle()<CR>
+
+" Función para alternar wrap
+function! WrapToggle()
+    if(&wrap == 1)
+        set nowrap
+    else
+        set wrap
+    endif
+endfunction
+nnoremap <leader>w :call WrapToggle()<CR>
+
+" CONFIGURACIÓN AVANZADA
+" -----------------------------------------------------------------------------
+" Completado mejorado
+set completeopt=menu,menuone,noselect
+
+" Mostrar caracteres invisibles
+set list
+set listchars=tab:▸\ ,trail:·,extends:❯,precedes:❮,nbsp:×
+
+" Configuración de plegado
+set foldmethod=indent
+set foldlevel=99
+set foldlevelstart=99
+set foldenable
+
+" Configuración de netrw (explorador de archivos)
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+
+" STATUSLINE PERSONALIZADA
+" -----------------------------------------------------------------------------
+set statusline=
+set statusline+=%#StatusLine#
+set statusline+=\ %f                               " Nombre del archivo
+set statusline+=\ %m                               " Modificado
+set statusline+=\ %r                               " Solo lectura
+set statusline+=\ %h                               " Ayuda
+set statusline+=\ %w                               " Preview
+set statusline+=%=                                 " Separador
+set statusline+=\ %y                               " Tipo de archivo
+set statusline+=\ %{&encoding}                     " Codificación
+set statusline+=\ %{&fileformat}                   " Formato
+set statusline+=\ %p%%                             " Porcentaje del archivo
+set statusline+=\ %l:%c                            " Línea:Columna
+set statusline+=\
+
+" CONFIGURACIÓN DE TERMINAL
+" -----------------------------------------------------------------------------
+if has('terminal')
+    nnoremap <leader>t :terminal<CR>
+    tnoremap <Esc> <C-\><C-n>
+endif
