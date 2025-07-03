@@ -35,3 +35,6 @@ opt.mousemoveevent = true
 
 -- Disable native menu
 vim.g.neovide_menu_disabled = true
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

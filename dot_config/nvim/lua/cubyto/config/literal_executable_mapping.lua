@@ -23,7 +23,7 @@ local function compile_cpp()
 		-- Ejecuta el comando de compilación
 		vim.cmd("!" .. compile_command)
 	else
-		print("No es un archivo .cpp or .c")
+		print("No es un archivo .cpp")
 	end
 end
 
@@ -47,7 +47,7 @@ local function compile_and_run_cpp()
 		local executable = output_dir .. "/" .. vim.fn.fnamemodify(filename, ":t:r")
 
 		-- Construye el comando de compilación
-		local compile_command = "g++ --debug " .. filename .. " -o " .. executable
+		local compile_command = "clang++ --debug " .. filename .. " -o " .. executable
 
 		-- Compilar el archivo
 		vim.cmd("!" .. compile_command)
@@ -56,31 +56,6 @@ local function compile_and_run_cpp()
 		vim.cmd("split | terminal cd " .. output_dir .. " && ./" .. vim.fn.fnamemodify(filename, ":t:r"))
 	else
 		print("No es un archivo .cpp")
-	end
-
-	if filename:match("%.c$") then
-		-- Obtén el directorio del archivo actual
-		local file_dir = vim.fn.fnamemodify(filename, ":h")
-
-		-- Construye el directorio de salida para los ejecutables
-		local output_dir = file_dir .. "/bin"
-
-		-- Crea el directorio si no existe
-		vim.fn.mkdir(output_dir, "p")
-
-		-- Construye el nombre del archivo ejecutable (sin extensión) y su ruta
-		local executable = output_dir .. "/" .. vim.fn.fnamemodify(filename, ":t:r")
-
-		-- Construye el comando de compilación
-		local compile_command = "gcc --debug " .. filename .. " -o " .. executable
-
-		-- Compilar el archivo
-		vim.cmd("!" .. compile_command)
-
-		-- Abre una terminal dentro de Neovim, cambia al directorio y ejecuta el archivo
-		vim.cmd("split | terminal cd " .. output_dir .. " && ./" .. vim.fn.fnamemodify(filename, ":t:r"))
-	else
-		print("No es un archivo c.")
 	end
 end
 
