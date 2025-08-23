@@ -53,6 +53,11 @@ return {
 			end,
 			desc = "Find config",
 		},
+		-- {
+		-- 	"<leader>fP",
+		-- 	require("telescope").extensions.projects.projects({}),
+		-- 	desc = "find Projects",
+		-- },
 		{
 			"cc",
 			function()

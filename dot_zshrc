@@ -377,6 +377,19 @@ eval $(thefuck --alias fk)
 
  alias cd="z"
 
+
+# Inicializar fasd
+# eval "$(fasd --init auto)"
+# alias cd="z"
+#
+# # Función para seleccionar proyectos con fzf
+# pj() {
+#   # listar solo directorios (-d), mostrar ranking
+#   local dir
+#   dir=$(fasd -dl | fzf --height 40% --reverse --border --prompt="📂 Proyectos > ") || return
+#   [ -n "$dir" ] && cd "$dir"
+# }
+
 export PATH=/usr/local/cuda/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
