@@ -60,7 +60,7 @@ return {
 			{
 				"<leader>sz",
 				pick_chezmoi,
-				desc = "Chezmoi",
+				desc = "Chezmoi Files",
 			},
 		},
 		opts = {

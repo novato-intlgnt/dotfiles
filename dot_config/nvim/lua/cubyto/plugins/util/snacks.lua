@@ -114,6 +114,20 @@ return {
 					Snacks.words.jump(-vim.v.count1)
 				end, "Prev Reference")
 
+				map("<leader>bl", function()
+					require("snacks").picker.buffers({
+						sort_lastused = true,
+						layout = "default", -- vertical layout (input and list at the top, preview below)
+						focus = "list", -- open in normal mode for immediate j/k navigation
+						height = 0.4, -- smaller overall height for the buffers picker
+						win = {
+							preview = {
+								wo = { number = true, relativenumber = true },
+							},
+						},
+					})
+				end, "Find buffers (Snacks)")
+
 				-- GIT
 				map("<leader>gB", function()
 					Snacks.gitbrowse()

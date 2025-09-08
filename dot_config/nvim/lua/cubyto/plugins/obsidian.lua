@@ -16,6 +16,7 @@ return {
 			date_format = "%d-%m-%Y",
 			time_format = "%H:%M",
 		},
+		pickers = { name = "snacks.pick" },
 		mappings = {
 			["gf"] = {
 				action = function()
@@ -60,6 +61,15 @@ return {
 			["Template_CodeNotes.md"] = {
 				category = "course",
 				subdir = "classes",
+				type = {
+					"Concept",
+					"Algorithm",
+					"DataStructure",
+					"Pattern",
+					"Technique",
+					"LanguageFeature",
+					"Framework",
+				},
 				vars = { "mainTag", "course", "title", "number", "prevNote", "nextNote" },
 			},
 			["Template_CodeSelf.md"] = {
@@ -142,27 +152,52 @@ return {
 		end
 
 		local function pick_folder(prompt, options, cb)
-			local pickers = require("telescope.pickers")
-			local finders = require("telescope.finders")
-			local conf = require("telescope.config").values
-			local actions = require("telescope.actions")
-			local action_state = require("telescope.actions.state")
+			-- local pickers = require("telescope.pickers")
+			-- local finders = require("telescope.finders")
+			-- local conf = require("telescope.config").values
+			-- local actions = require("telescope.actions")
+			-- local action_state = require("telescope.actions.state")
+			--
+			-- pickers
+			-- 	.new({}, {
+			-- 		prompt_title = prompt,
+			-- 		finder = finders.new_table({ results = options }),
+			-- 		sorter = conf.generic_sorter({}),
+			-- 		attach_mappings = function(prompt_bufnr, _)
+			-- 			actions.select_default:replace(function()
+			-- 				actions.close(prompt_bufnr)
+			-- 				local selection = action_state.get_selected_entry()[1]
+			-- 				cb(selection)
+			-- 			end)
+			-- 			return true
+			-- 		end,
+			-- 	})
+			-- 	:find()
 
-			pickers
-				.new({}, {
-					prompt_title = prompt,
-					finder = finders.new_table({ results = options }),
-					sorter = conf.generic_sorter({}),
-					attach_mappings = function(prompt_bufnr, _)
-						actions.select_default:replace(function()
-							actions.close(prompt_bufnr)
-							local selection = action_state.get_selected_entry()[1]
-							cb(selection)
-						end)
-						return true
-					end,
-				})
-				:find()
+			-- local snacks = require("snacks")
+			local items = {}
+			for idx, opt in ipairs(options) do
+				local item = {
+					idx = idx,
+					name = opt,
+					text = opt,
+				}
+				table.insert(items, item)
+			end
+			Snacks.picker({
+				title = prompt,
+				items = items,
+				layout = { preset = "select" },
+				format = function(item, _)
+					return {
+						{ item.text, item.text_hl },
+					}
+				end,
+				confirm = function(picker, picked)
+					picker:close()
+					cb(picked.name) -- aquí devuelves la opción seleccionada
+				end,
+			})
 		end
 
 		local function update_prev_note(prev_path, new_filename)
@@ -245,11 +280,25 @@ return {
 						local tags = { vars.subject, config.category }
 
 						vars.title = vim.fn.input("Title: ")
-						local file_path =
-							Path:new(vim.tbl_contains(config, "type") and (path .. "/" .. config.type) or path)
+						-- Versión más legible
+						local type_available = vim.tbl_contains(config, "type")
+						local is_reading = config.category == "reading"
 
-						tags.type = vim.tbl_contains(config, "type") and config.type or ""
-						client.opts.templates.substitutions = vars
+						local file_path_value = path
+						if type_available and is_reading then
+							file_path_value = path .. "/" .. config.type
+							table.insert(tags, config.type)
+						else
+							if vim.tbl_contains(config, "type") then
+								pick_folder("Select Type: ", config.type, function(typeCode)
+									table.insert(tags, typeCode)
+								end)
+							end
+							client.opts.templates.substitutions = vars
+						end
+
+						local file_path = Path:new(file_path_value)
+
 						local note = client:create_note({
 							title = vars.title,
 							id = vars.title,

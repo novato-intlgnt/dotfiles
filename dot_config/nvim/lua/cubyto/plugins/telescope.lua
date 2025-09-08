@@ -153,7 +153,7 @@ return {
 		vim.keymap.set("n", "<leader>fu", builtin.grep_string, { desc = "Find string under cursor in cwd" })
 
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "View the helper page" })
-		vim.keymap.set("n", "<leader>bl", builtin.buffers, { desc = "Show the list of buffers" })
+		-- vim.keymap.set("n", "<leader>bl", builtin.buffers, { desc = "Show the list of buffers" })
 
 		-- GIT search
 		vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Show the git status" })
